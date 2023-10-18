@@ -11,6 +11,7 @@ WORKDIR /src
 COPY ["Gaspadorius.csproj", "./"]
 RUN dotnet restore "Gaspadorius.csproj"
 COPY . .
+RUN chmod 666 /app/data.db
 WORKDIR "/src/."
 RUN dotnet build "Gaspadorius.csproj" -c $configuration -o /app/build
 
