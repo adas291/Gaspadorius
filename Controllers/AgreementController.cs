@@ -6,11 +6,12 @@ using Microsoft.AspNetCore.Authorization;
 using Gaspadorius.Auth;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Diagnostics;
+using Gaspadorius.Data.Models;
 
 namespace Gaspadorius;
 
-[Route("api/Agreement")]
-[Authorize]
+[Route("api/[controller]")]
+// [Authorize]
 public class AgreementController : Controller
 {
 
@@ -20,9 +21,17 @@ public class AgreementController : Controller
         _authorizationService = authorizationService;
     }
 
+    [HttpGet("")]
+    [Authorize(Roles = Roles.Admin)]
+    public async Task<IActionResult> GetAllAgreements()
+    {
+        var result = await AgreementRepo.GetAllAgreements();
+        return Ok(result);
+    }
+
     [HttpPost("Create")]
-    [Authorize(Roles.Admin)]
-    public string Create(AgreemenDto model)
+    [Authorize(Roles = Roles.Admin)]
+    public string Create([FromBody]AgreemenDto model)
     {
         try
         {
@@ -37,7 +46,7 @@ public class AgreementController : Controller
 
     }
 
-    [HttpGet("/City/{city}/Property/{propertyId}/Agreement/{agreementId}")]
+    [HttpGet("City/{city}/Property/{propertyId}/Id/{agreementId}")]
     [Authorize]
     public async Task<ActionResult<AgreemenDto>> Get(string city, int propertyId, int agreementId)
     {
@@ -72,8 +81,19 @@ public class AgreementController : Controller
             return "error while processing delete requiest";
     }
 
+    [HttpPatch("Update")]
+    [Authorize(Roles = Roles.Admin)]
+    public IActionResult UpdateStatus([FromBody] AgreemenDto agreemenDto)
+    {
+        if (AgreementRepo.Update(agreemenDto) == 1)
+        {
+            return Ok("Agreement was updated");
+        };
+        return BadRequest("Agrement was not updated");
+    }
+
     [HttpPost("UpdateStatus")]
-    [Authorize(Roles.Admin)]
+    [Authorize(Roles = Roles.Admin)]
     public IActionResult UpdateStatus(AgreementStatus status)
     {
         System.Console.WriteLine(status.FkAgreementStatus);

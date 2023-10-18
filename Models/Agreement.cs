@@ -12,7 +12,7 @@ public class AgreemenDto : IUserOwnedResource
     [Required]
     public int UserId { get; set; }
     [Required]
-    public int FkObject { get; set; }
+    public int FkProperty { get; set; }
     [Required]
     public int FkAgreementType { get; set; }
     [Required]
@@ -20,5 +20,6 @@ public class AgreemenDto : IUserOwnedResource
     public string Comments { get; set; } = string.Empty;
     [Required]
     public DateTime StartDate { get; set; }
+    [Required]public int FkCity { get; set; }
 
 }

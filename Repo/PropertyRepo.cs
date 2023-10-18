@@ -31,7 +31,7 @@ public static class PropertyRepo
 
     public static int CreateProperty(Property leaseObject)
     {
-        string query = "INSERT INTO Property (Title, Address, Size, FkCity, FkOwner) VALUES (@Title, @Address, @Size, @FkCity, @FkOwner)";
+        string query = "INSERT INTO Property (Title, Address, Size, FkCity) VALUES (@Title, @Address, @Size, @FkCity)";
 
         using var conn = new SqliteConnection("Data source=data.db");
         var parameters = new
@@ -58,7 +58,7 @@ public static class PropertyRepo
 
         string query = @"
                             UPDATE Property
-                            SET Title = @Title, Address = @Address, Size = @Size, FkCity = @FkCity, FkOwner = @FkOwner
+                            SET Title = @Title, Address = @Address, Size = @Size, FkCity = @FkCity
                             WHERE Id = @Id;
                         ";
 

@@ -2,7 +2,11 @@ using System.Diagnostics.Tracing;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Gaspadorius.Auth;
+using Gaspadorius.Data.Models;
+using Gaspadorius.DataContext;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
@@ -26,7 +30,17 @@ Gaspadorius.Config.ConfigureServices(builder.Configuration);
 builder.Services.AddSingleton<Gaspadorius.Auth.JwtTokenService>();
 builder.Services.AddSingleton<Gaspadorius.Auth.UserManager>();
 
-    
+builder.Services.AddDbContext<Gaspadorius.DataContext.UserContext>(options =>
+{
+    options.UseSqlite("Data source =ef.db");
+});
+
+// builder.Services.AddIdentity<User, Role>()
+//     .AddDefaultTokenProviders();
+
+// builder.Services.AddScoped<RoleManager<Role>>();
+
+
 builder.Services.AddAuthorization(options =>{
     options.AddPolicy(PolicyNames.ResourceOwner, policy => policy.Requirements.Add(new ResourceOwnerRequirement()));
     options.AddPolicy(PolicyNames.HasPhone, policy => policy.Requirements.Add(new PhoneRequirement()));
@@ -52,7 +66,7 @@ if (app.Environment.IsDevelopment())
     // app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

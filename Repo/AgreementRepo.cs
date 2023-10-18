@@ -3,11 +3,62 @@ using System.Formats.Tar;
 using Dapper;
 using Microsoft.Data.Sqlite;
 using Gaspadorius.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Gaspadorius.Repos;
 
 public static class AgreementRepo
 {
+    public static async Task<List<AgreemenDto>> GetAllAgreements()
+    {
+        using var conn = new SqliteConnection("Data source=data.db");
+        conn.Open();
+
+        var query = "SELECT * FROM Agreement";
+
+        // Execute the query and retrieve the data
+        var agreements = await conn.QueryAsync<AgreemenDto>(query);
+
+        return agreements.ToList();
+    }
+
+    public static int Update(AgreemenDto agreement)
+    {
+        System.Console.WriteLine(agreement.Title);
+        using var conn = new SqliteConnection("Data source=data.db");
+        conn.Open();
+
+        var query =
+            $@"
+                UPDATE Agreement
+                SET Title = @Title,
+                    FkAgreementType = @FkAgreementType,
+                    UserId = @UserId,
+                    FkProperty = @FkProperty,
+                    PriceInCents = @PriceInCents,
+                    StartDate = @StartDate,
+                    Comments = @Comments,
+                    FkCity = @FkCity
+                WHERE Id = @Id
+            ";
+
+        var parameters = new
+        {
+            agreement.Id,  // Assuming you have an Id property in your agreement object
+            agreement.Title,
+            agreement.FkAgreementType,
+            agreement.UserId,
+            agreement.FkProperty,
+            agreement.PriceInCents,
+            StartDate = agreement.StartDate.ToString("yyyy-MM-dd"),
+            agreement.Comments,
+            agreement.FkCity,
+        };
+
+        return conn.Execute(query, parameters);
+
+    }
     public static int Create(AgreemenDto agreement)
     {
         using var conn = new SqliteConnection("Data source=data.db");
@@ -15,8 +66,8 @@ public static class AgreementRepo
 
         var query =
         $@"
-            INSERT INTO Agreement(Title, FkAgreementType, FkTenant, FkObject, PriceInCents, StartDate, Comments)
-            VALUES(@Title, @FkAgreementType, @FkTenant, @FkObject, @PriceInCents, @StartDate, @Comments)
+            INSERT INTO Agreement(Title, FkAgreementType, UserId, FkProperty, PriceInCents, StartDate, Comments, FkCity)
+            VALUES(@Title, @FkAgreementType, @UserId, @FkProperty, @PriceInCents, @StartDate, @Comments, @FkCity)
         ";
 
         var parameters = new
@@ -24,10 +75,11 @@ public static class AgreementRepo
             agreement.Title,
             agreement.FkAgreementType,
             agreement.UserId,
-            agreement.FkObject,
+            agreement.FkProperty,
             agreement.PriceInCents,
             StartDate = agreement.StartDate.ToString("yyyy-MM-dd"),
-            agreement.Comments
+            agreement.Comments,
+            agreement.FkCity,
         };
 
         return conn.Execute(query, parameters);
@@ -52,7 +104,7 @@ public static class AgreementRepo
                             a.FkCity = @cityId AND
                             a.FkProperty = @propertyId";
 
-        return await conn.QueryFirstOrDefaultAsync<AgreemenDto>(query, new { cityId, propertyId, agreementId});
+        return await conn.QueryFirstOrDefaultAsync<AgreemenDto>(query, new { cityId, propertyId, agreementId });
     }
 
 

@@ -28,6 +28,10 @@ public record UpdatePropertyDto(
     int FkCity
 );
 
+public record CityDto(
+    int Id,
+    string Name
+);
 
 
 // public record UserDto(

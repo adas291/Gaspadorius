@@ -15,19 +15,42 @@ using System.Reflection.Metadata.Ecma335;
 using System.CodeDom.Compiler;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Gaspadorius.DataContext;
+using Gaspadorius.Data.Models;
+using Gaspadorius.Models.Dto;
+using System.Collections.Immutable;
 
 public class ExtraController : Controller
 {
-    private readonly IConfiguration _configuration;
     private readonly JwtTokenService _jwtTokenService;
     private readonly IAuthorizationService _authorizationService;
+    private readonly Gaspadorius.DataContext.UserContext _userContext;
 
-    public ExtraController(IConfiguration configuration, JwtTokenService jwtTokenService, IAuthorizationService authorizationService)
+    public ExtraController(UserContext userContext, JwtTokenService jwtTokenService, IAuthorizationService authorizationService)
     {
-        _configuration = configuration;
         _jwtTokenService = jwtTokenService;
         _authorizationService = authorizationService;
+        _userContext = userContext;
+    }
 
+    [HttpGet("/insert/{id}")]
+    public IActionResult InsertRow(int id)
+    {
+        City city = new City() { Id = id, Name = "Kaunas" };
+        var entity = _userContext.Cities.Add(city);
+        _userContext.SaveChanges();
+        return Ok(entity.Entity);
+    }
+    [HttpGet("greet"), AllowAnonymous]
+    public IActionResult Greet()
+    {
+        return Ok(new { message = "hello from backend apie" });
+    }
+
+    [HttpGet("list")]
+    public IActionResult ListCities()
+    {
+        return Ok(_userContext.Cities.ToList<City>());
     }
 
     [HttpGet("phone")]

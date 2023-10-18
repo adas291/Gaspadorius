@@ -85,8 +85,10 @@ public class PropertyController : Controller
 
     [HttpPatch("Update")]
     [Authorize(Roles = Roles.Admin)]
-    public IActionResult Update(Property leaseObject)
+    public IActionResult Update([FromBody]Property leaseObject)
     {
+        System.Console.WriteLine(leaseObject.Id);
+        System.Console.WriteLine(leaseObject.Title);
         if (PropertyRepo.Update(leaseObject) == 1)
         {
             return Ok("Record created successfully");
