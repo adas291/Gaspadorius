@@ -6,6 +6,7 @@ using Gaspadorius.Data.Models;
 using Gaspadorius.DataContext;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
@@ -66,7 +67,7 @@ if (app.Environment.IsDevelopment())
     // app.UseSwaggerUI();
 }
 
-// app.UseHttpsRedirection();
+
 
 app.UseAuthorization();
 
