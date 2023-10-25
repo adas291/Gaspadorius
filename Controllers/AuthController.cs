@@ -64,19 +64,16 @@ public class AuthController : ControllerBase
         {
             var accessToken = _jwtTokenService.CreateAccessToken(user, roles);
 
+            Response.Cookies.Append("jwt", accessToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true, // If using HTTPS
+                SameSite = SameSiteMode.None // Use appropriate setting
+            });
+
             // return Ok(new SuccessfulLoginDto(accessToken));
-            return Ok(accessToken);
+            return Ok();
         }
-
         return BadRequest("Passwords dont match");
-
-        // if (userId == null)
-        //     return BadRequest("Could not create new user");
-
-        // var addToRole = await UserManager.AddToRoleAsync((long)userId, Roles.RegisteredUser);
-
-        // if (addToRole == 1)
-        //     return Ok("registered " + userId);
-
     }
 }

@@ -17,6 +17,7 @@ public class ResourceOwnerAuthorizationHandler : AuthorizationHandler<ResourceOw
         // System.Console.WriteLine(resource.UserId);
 
         System.Console.WriteLine(context.User.FindFirstValue(JwtRegisteredClaimNames.Sub));
+        System.Console.WriteLine("Resource " + resource.UserId);
 
         if (context.User.IsInRole(Roles.Admin) ||
             context.User.FindFirstValue(JwtRegisteredClaimNames.Sub) == resource.UserId.ToString())

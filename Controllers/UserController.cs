@@ -33,10 +33,11 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = Roles.RegisteredUser)]
+    [Authorize]
     public async Task<ActionResult<UserDto>> GetUser(int id)
     {
         var user = await UserRepo.GetUserAsync(id);
+        System.Console.WriteLine(id);
         
         if(user is null)
         {

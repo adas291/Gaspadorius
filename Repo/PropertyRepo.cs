@@ -55,14 +55,16 @@ public static class PropertyRepo
 
     public static int Update(Property leaseObject)
     {
+        System.Console.WriteLine(leaseObject.UserId + " User iddd");
 
         string query = @"
                             UPDATE Property
-                            SET Title = @Title, Address = @Address, Size = @Size, FkCity = @FkCity
+                            SET Title = @Title, Address = @Address, Size = @Size, FkCity = @FkCity, UserId = @UserId
                             WHERE Id = @Id;
                         ";
 
         using var conn = new SqliteConnection("Data source=data.db");
+
         return conn.Execute(query, leaseObject);
     }
 

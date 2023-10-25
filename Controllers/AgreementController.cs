@@ -71,8 +71,8 @@ public class AgreementController : Controller
 
     }
 
-    [HttpDelete("Delete")]
-    [Authorize(Roles.Admin)]
+    [HttpDelete("Delete/{id}")]
+    [Authorize(Roles = Roles.Admin)]
     public string Delete(int id)
     {
         if (AgreementRepo.Delete(id) == 1)

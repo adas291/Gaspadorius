@@ -36,6 +36,15 @@ builder.Services.AddDbContext<Gaspadorius.DataContext.UserContext>(options =>
     options.UseSqlite("Data source =ef.db");
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("http://localhost:3000")
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+    });
+});
 // builder.Services.AddIdentity<User, Role>()
 //     .AddDefaultTokenProviders();
 
@@ -72,5 +81,6 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseCors();
 
 app.Run();

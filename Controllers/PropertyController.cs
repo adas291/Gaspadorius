@@ -27,7 +27,7 @@ public class PropertyController : Controller
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = Roles.RegisteredUser)]
+    [Authorize]
     public async Task<ActionResult<PropertyDto>> GetProperty(int id)
     {
 
@@ -66,7 +66,7 @@ public class PropertyController : Controller
         return Ok("Record created successfully");
     }
 
-    [HttpDelete("Delete")]
+    [HttpDelete("Delete/{id}")]
     [Authorize(Roles = Roles.Admin)]
     public IActionResult Delete(int Id)
     {
@@ -74,6 +74,7 @@ public class PropertyController : Controller
         {
             if (Repos.PropertyRepo.Delete(Id) == 1)
                 return Ok($"Lease object {Id} removed successfully");
+            else return BadRequest("Not removed");
         }
         catch (Exception ex)
         {
